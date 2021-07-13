@@ -48,6 +48,8 @@ import javax.annotation.CheckForNull;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -60,8 +62,6 @@ import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.net.URL;
-import java.net.MalformedURLException;
 
 /**
  * A particular version of a plugin and its metadata.
@@ -214,25 +214,6 @@ public class HPI extends MavenArtifact {
         }
 
         private static final String OPTIONAL_RESOLUTION = ";resolution:=optional";
-    }
-
-    public static class Developer {
-        @JSONField
-        public final String name;
-        @JSONField
-        public final String developerId;
-        @JSONField
-        public final String email;
-
-        public Developer(String name, String developerId, String email) {
-            this.name = has(name) ? name : null;
-            this.developerId = has(developerId) ? developerId : null;
-            this.email = has(email) ? email : null;
-        }
-
-        private boolean has(String s) {
-            return s!=null && s.length()>0;
-        }
     }
 
     private String name;

@@ -99,7 +99,13 @@ public class MaintainersSource {
         try {
             final String jsonData = IOUtils.toString(new URL(MAINTAINERS_INFO_URL), StandardCharsets.UTF_8);
             final List<JsonMaintainer> rawMaintainersInfo = JSON.parseObject(jsonData, new TypeReferenceForListOfJsonMaintainer().getType());
-            maintainerInfo = new HashMap<>(rawMaintainersInfo.stream().map(m -> new AbstractMap.SimpleEntry<>(m.name, m.toMaintainer())).collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue)));
+            maintainerInfo = new HashMap<>();
+            rawMaintainersInfo.forEach(m -> {
+                if (maintainerInfo.containsKey(m.name)) {
+                    LOGGER.warning("Duplicate entry for " + m.name + " in " + MAINTAINERS_INFO_URL);
+                }
+                maintainerInfo.put(m.name, m.toMaintainer());
+            });
         } catch (RuntimeException | IOException ex) {
             LOGGER.log(Level.WARNING, "Failed to process " + MAINTAINERS_INFO_URL, ex);
             maintainerInfo = new HashMap<>();
